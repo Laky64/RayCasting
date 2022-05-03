@@ -1,4 +1,4 @@
-#include "Wall.h"
+#include "../include/Wall.h"
 
 Wall::Wall(sf::Vector2f start, sf::Vector2f end)
 {
