@@ -1,6 +1,6 @@
 #include "../include/RayCaster.h"
 
-
+#include "math.h"
 
 
 RayCaster::RayCaster()
