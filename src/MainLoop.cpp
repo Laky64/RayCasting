@@ -1,6 +1,6 @@
-#include "mainLoop.h"
-#include "Wall.h"
-#include "RayCaster.h"
+#include "../include/mainLoop.h"
+#include "../include/Wall.h"
+#include "../include/RayCaster.h"
 
 MainLoop::MainLoop()
 {
