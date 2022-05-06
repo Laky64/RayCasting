@@ -2,6 +2,8 @@
 #include "../include/Wall.h"
 #include "../include/RayCaster.h"
 
+#include "math.h"
+
 MainLoop::MainLoop()
 {
     // initialize
