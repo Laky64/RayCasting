@@ -1,49 +1,74 @@
-#include "../include/RayCaster.h"
+#include "RayCaster.h"
+#include <math.h>
 
-#include "math.h"
+
 
 
 RayCaster::RayCaster()
 {
     test[0].color = sf::Color::Red;
     test[1].color = sf::Color::Red;
+    mapMidPoint.x = 100;
+    mapMidPoint.y = 100;
 }
 
-void RayCaster::render(sf::RenderWindow* window, std::vector<Wall>* walls, sf::Vector2f PlayerPos, float dir)
+void RayCaster::render(sf::RenderWindow* window, std::vector<Wall>* walls, sf::Vector2f PlayerPos, float dir, float Ydir)
 {
-    this->windowSize = window->getSize();
-    this->test[0].position = PlayerPos;
+    
+    //this->test[0].position = mapMidPoint;
     float lastVal = 0;
-    for (int x = 0; x < window->getSize().x; x += 2) {
+    float lastChange = 0;
+    int a = 1;
+    for (int x = 0; x < windowSize.x + 1; x += 1) {
         float dist = viewDistance;
-        sf::Vector2f cast = sf::Vector2f(PlayerPos.x + viewDistance * cos((dir * 0.01745329 - fov * 0.01745329 / 2 + fov * 0.01745329 / window->getSize().x * x)), PlayerPos.y + viewDistance * sin((dir - fov / 2 + fov / window->getSize().x * x) * 0.01745329));
+        sf::Vector2f cast = sf::Vector2f(PlayerPos.x + viewDistance * cos((dir * 0.01745329 - fov * 0.01745329 / 2 + fov * 0.01745329 / windowSize.x * x)), PlayerPos.y + viewDistance * sin((dir - fov / 2 + fov / windowSize.x * x) * 0.01745329));
         for (Wall it : *walls) {
-            float wallDist = this->getDistance(it, PlayerPos, cast);
+            float wallDist = getDistance(it, PlayerPos, cast);
             if (wallDist < dist && wallDist != 0) {
                 dist = wallDist;
             }
 
         }
+
         float alpha = atan(abs(float(cast.y - PlayerPos.y) / float(cast.x - PlayerPos.x)));
         int xDir = (cast.x - PlayerPos.x) / abs(cast.x - PlayerPos.x);
         int yDir = (cast.y - PlayerPos.y) / abs(cast.y - PlayerPos.y);
-        this->test[1].position = sf::Vector2f(PlayerPos.x + cos(alpha) * dist * xDir, PlayerPos.y + sin(alpha) * dist * yDir);
+        //this->test[1].position = sf::Vector2f(cos(alpha) * dist * xDir, sin(alpha) * dist * yDir) + mapMidPoint;
+        //window->draw(test, 2, sf::Lines);
 
-        if (dist == viewDistance) { dist = 0; }
+        if (dist != viewDistance) {
+            float halfWin = (windowSize.x / 2);
+            dist *= cos(abs((x - halfWin)) / halfWin * (fov * 0.01570796 / 2));
 
-        window->draw(test, 2, sf::Lines);
-        float val = 1 - dist / viewDistance;
 
-        this->rect.setPosition(x, (window->getSize().y - window->getSize().y/(dist / 15))/2);
-        this->rect.setSize(sf::Vector2f(2, window->getSize().y / (dist / 15)));
-        this->rect.setFillColor( sf::Color(255.0 * val, 255 * val, 255 * val, 255));
-        //std::cout << (abs(lastVal - dist)) << "\n";
-        window->draw(this->rect);
-        lastVal = dist;
+
+
+
+            float val = 1.3 - dist / (viewDistance)-(pow(x - windowSize.x / static_cast<float>(2), 2)) / (pow(0 - windowSize.x / static_cast<float>(2), 2));
+            //val = (windowSize.y / (dist / 150)) / (windowSize.y);
+
+
+            lastChange = dist - lastVal;
+
+            val = 1 - abs(lastChange);
+
+            if (val < 0.7)
+                val = 0.7;
+            else if (val > 1)
+                val = 1;
+            float yPos = abs(x - halfWin);
+            this->rect.setPosition(x, (windowSize.y - windowSize.y / (dist / 15)) / 2 + Ydir * 0.1);
+            this->rect.setSize(sf::Vector2f(3, windowSize.y / (dist / 15)));
+            //this->rect.setSize(sf::Vector2f(2, dist));
+            this->rect.setFillColor(sf::Color(255.0 * val, 255 * val, 255 * val, 255));
+            window->draw(this->rect);
+            lastVal = dist;
+        }
+
+
     }
 
 }
-
 
 float RayCaster::getDistance(Wall wall, sf::Vector2f PlayerPos, sf::Vector2f castPos)
 {

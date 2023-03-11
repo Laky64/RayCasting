@@ -46,13 +46,10 @@ private:
 	void initVariables();
 	void initWindow();
 	void initGameObjects();
-	void initGUI();
-
 
 	//-Events-//
 	void pollEvents();
-	void updateGameObjects();
-	void updateGUI();
+
 
 
 	//--Private Variables --//
@@ -65,6 +62,7 @@ private:
 
 	KeyMapWASD keyMapWASD;
 	KeyMap keyMap;
+	float sensitivity;
 
 	//-timing-fps-//
 	float fps;
@@ -84,6 +82,7 @@ private:
 	sf::Vector2f PlayerPos;
 
 	float lookDir;
+	float lookDirY;
 
 	float speed;
 

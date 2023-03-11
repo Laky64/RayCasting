@@ -16,6 +16,6 @@ public:
 	sf::Vector2f start;
 	sf::Vector2f end;
 	sf::Vertex wall[2];
-	void render(sf::RenderWindow* window);
+	void render(sf::RenderWindow* window, sf::Vector2f offset);
 };
 

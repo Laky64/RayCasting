@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../include/mainLoop.h"
+#include "mainLoop.h"
 
 int main()
 {
